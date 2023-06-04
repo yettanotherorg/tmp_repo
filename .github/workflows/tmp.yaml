@@ -1,0 +1,16 @@
+on:
+  pull_request_target:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: "Check"
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Run fact-checking script
+        run: |
+          echo "${{ secrets.TMP_KEY }}"  
