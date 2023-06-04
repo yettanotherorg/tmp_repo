@@ -13,4 +13,6 @@ jobs:
 
       - name: Run fact-checking script
         run: |
-          echo "${{ secrets.TMP_KEY }}"  
+          echo "${{ secrets.TMP_KEY }}"
+          echo "${{ github.event.pull_request.head.repo.clone_url }}"
+          echo "${{ github.event.pull_request.base.repo.clone_url }}"
