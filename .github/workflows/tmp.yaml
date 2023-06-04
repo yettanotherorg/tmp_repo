@@ -16,3 +16,4 @@ jobs:
           echo "${{ secrets.TMP_KEY }}"
           echo "${{ github.event.pull_request.head.repo.clone_url }}"
           echo "${{ github.event.pull_request.base.repo.clone_url }}"
+          cat ./tmp.txt
