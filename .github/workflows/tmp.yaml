@@ -1,11 +1,22 @@
 on:
-  pull_request_target:
+   issue_comment:
+     types: [created]
 
+permissions:
+   contents: read
+   issues: read
+   pull-requests: write
+   
+env:
+  WARDENS: '["alxarno", "mcclown"]'
+ 
 jobs:
-  check:
+  payout-calc:
     runs-on: ubuntu-latest
-    name: "Check"
-
+    name: "TMP"
+    
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check' && contains(fromJSON($WARDENS), github.actor))
+    
     steps:
       - uses: actions/checkout@v3
         with:
