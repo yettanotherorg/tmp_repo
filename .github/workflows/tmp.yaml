@@ -8,20 +8,38 @@ permissions:
    pull-requests: write
    
 jobs:
-  payout-calc:
-    runs-on: ubuntu-latest
-    name: "TMP"
-    
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check') && contains(fromJSON(secrets.TEAM), github.actor)
-    
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: main
+   permission-check-job:
+      runs-on: ubuntu-latest
+      if: github.event.issue.pull_request && contains(github.event.comment.body, '/check')
+      outputs:
+         permission: ${{ steps.permissions-check.outputs.defined }}
+      steps:
+         - name: Check for Secret availability
+           id: permissions-check
+           # perform secret check & put boolean result as an output
+           shell: bash
+           run: |
+               if [ '${{ contains(fromJSON(secrets.TEAM), github.actor) }}' ]; then
+                  echo "defined=true" >> $GITHUB_OUTPUT;
+               else
+                  echo "defined=false" >> $GITHUB_OUTPUT;
+               fi
+ 
+   payout-calc:
+       runs-on: ubuntu-latest
+       name: "TMP"
+       needs: [permission-check-job]
+       if: needs.check-secret.outputs.permission == 'true'
+ 
+       steps:
 
-      - name: Run fact-checking script
-        run: |
-          echo "${{ secrets.TMP_KEY }}"
-          echo "${{ github.event.pull_request.head.repo.clone_url }}"
-          echo "${{ github.event.pull_request.base.repo.clone_url }}"
-          cat ./tmp.txt
+         - uses: actions/checkout@v3
+           with:
+             ref: main
+
+         - name: Run fact-checking script
+           run: |
+             echo "${{ secrets.TMP_KEY }}"
+             echo "${{ github.event.pull_request.head.repo.clone_url }}"
+             echo "${{ github.event.pull_request.base.repo.clone_url }}"
+             cat ./tmp.txt
