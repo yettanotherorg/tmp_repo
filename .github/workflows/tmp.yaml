@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     name: "TMP"
     
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check') && contains(fromJSON(${{ secrets.TEAM }}), github.actor)
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check') && contains(fromJSON(secrets.TEAM), github.actor)
     
     steps:
       - uses: actions/checkout@v3
