@@ -19,11 +19,7 @@ jobs:
            # perform secret check & put boolean result as an output
            shell: bash
            run: |
-               if [ '${{ contains(fromJSON(secrets.TEAM), github.actor) }}' ]; then
-                  echo "defined=true" >> $GITHUB_OUTPUT;
-               else
-                  echo "defined=false" >> $GITHUB_OUTPUT;
-               fi
+               echo "defined='${{ contains(fromJSON(secrets.TEAM), github.actor) }}'" >> $GITHUB_OUTPUT;
  
    payout-calc:
        runs-on: ubuntu-latest
